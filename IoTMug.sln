@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTMug.Api", "IoTMug.Api\IoTMug.Api.csproj", "{8BAC2112-BA23-4606-92E6-5F569113C0B6}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "IoTMug.Web", "IoTMug.Web\", "{54910BB3-F69E-45DF-A3BF-CA3F8DF9E823}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_61338"
+		Debug.AspNetCompiler.PhysicalPath = "IoTMug.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61338\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_61338"
+		Release.AspNetCompiler.PhysicalPath = "IoTMug.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61338\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61338"
+		SlnRelativePath = "IoTMug.Web\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BAC2112-BA23-4606-92E6-5F569113C0B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BAC2112-BA23-4606-92E6-5F569113C0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BAC2112-BA23-4606-92E6-5F569113C0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BAC2112-BA23-4606-92E6-5F569113C0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54910BB3-F69E-45DF-A3BF-CA3F8DF9E823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54910BB3-F69E-45DF-A3BF-CA3F8DF9E823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54910BB3-F69E-45DF-A3BF-CA3F8DF9E823}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{54910BB3-F69E-45DF-A3BF-CA3F8DF9E823}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70192642-7C54-4DFE-A60B-F6450F8B8683}
+	EndGlobalSection
+EndGlobal

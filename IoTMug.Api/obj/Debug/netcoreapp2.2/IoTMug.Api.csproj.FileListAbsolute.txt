@@ -12,3 +12,17 @@ E:\David\Projects\IoTMug\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.AssemblyI
 E:\David\Projects\IoTMug\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.RazorTargetAssemblyInfo.cache
 E:\David\Projects\IoTMug\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.dll
 E:\David\Projects\IoTMug\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.pdb
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Api.deps.json
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Api.runtimeconfig.json
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Api.runtimeconfig.dev.json
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Api.dll
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Api.pdb
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.csprojAssemblyReference.cache
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.csproj.CoreCompileInputs.cache
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.RazorAssemblyInfo.cache
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.RazorAssemblyInfo.cs
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.AssemblyInfoInputs.cache
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.AssemblyInfo.cs
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.RazorTargetAssemblyInfo.cache
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.dll
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.pdb

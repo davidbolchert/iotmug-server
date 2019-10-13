@@ -26,3 +26,10 @@ E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug
 E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.RazorTargetAssemblyInfo.cache
 E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.dll
 E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.pdb
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Core.dll
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Data.dll
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Services.dll
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Core.pdb
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Data.pdb
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\bin\Debug\netcoreapp2.2\IoTMug.Services.pdb
+E:\David\Projects\IoTMug\iotmug-server\IoTMug.Api\obj\Debug\netcoreapp2.2\IoTMug.Api.csproj.CopyComplete

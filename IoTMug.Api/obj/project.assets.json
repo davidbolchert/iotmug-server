@@ -12076,11 +12076,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\IoTMug.Api.csproj",
+      "projectUniqueName": "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\IoTMug.Api.csproj",
       "projectName": "IoTMug.Api",
-      "projectPath": "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\IoTMug.Api.csproj",
+      "projectPath": "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\IoTMug.Api.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\obj\\",
+      "outputPath": "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12094,7 +12094,10 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json": {},
+        "https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json": {},
+        "https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.2": {

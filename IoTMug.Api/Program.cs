@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Meetup.Api
+namespace IoTMug.Api
 {
     public class Program
     {

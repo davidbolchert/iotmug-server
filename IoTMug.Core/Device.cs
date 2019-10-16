@@ -1,13 +1,16 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IoTMug.Core
 {
     public class Device
     {
-        public Guid DeviceId { get; set; }
+        public Guid DeviceId { get; private set; } = new Guid();
+
+        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
         public byte[] PfxCertificate { get; set; }
@@ -21,6 +24,6 @@ namespace IoTMug.Core
         }
 
         [ForeignKey("DeviceTypeId")]
-        public DeviceType Type { get; set; }
+        public virtual DeviceType Type { get; set; }
     }
 }

@@ -28,7 +28,8 @@ namespace IoTMug.Data.Migrations
 
                     b.Property<Guid?>("DeviceTypeId");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<byte[]>("PfxCertificate");
 
@@ -46,9 +47,11 @@ namespace IoTMug.Data.Migrations
                     b.Property<Guid>("DeviceTypeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("DefaultTwinData");
+                    b.Property<string>("DefaultTwinData")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("DeviceTypeId");
 

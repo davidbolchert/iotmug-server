@@ -1,16 +1,22 @@
 ﻿using System.Collections.Generic;
+using IoTMug.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Meetup.Api.Controllers
+namespace IoTMug.Api.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly ICertificateService _certificateService;
+
+        public ValuesController(ICertificateService certificateService) => _certificateService = certificateService;
+
         // GET api/v1/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            System.IO.File.WriteAllBytes("test.pfx", _certificateService.GenerateDeviceCertificate("test", "test"));
             return new string[] { "value1", "value2" };
         }
 

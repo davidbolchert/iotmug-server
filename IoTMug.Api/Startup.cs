@@ -1,6 +1,7 @@
 ﻿using IoTMug.Api.Providers;
 using IoTMug.Data;
 using IoTMug.Data.Repositories;
+using IoTMug.Services.Implementations;
 using IoTMug.Services.Interfaces;
 using IoTMug.Services.Shared;
 using Microsoft.AspNetCore.Builder;
@@ -10,8 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System.Text.Json;
 
-namespace Meetup.Api
+namespace IoTMug.Api
 {
     public class Startup
     {
@@ -25,27 +27,30 @@ namespace Meetup.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<DatabaseSettings>(Configuration.GetSection("ConnectionStrings"));
-
             // Add entity framework services.
+            services.Configure<DatabaseSettings>(Configuration.GetSection("ConnectionStrings"));
             services.AddDbContext<IoTMugContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IDatabaseService, GenericRepository>();
 
+            // Add iot hub services
+            services.Configure<CertificateServiceSettings>(Configuration.GetSection(nameof(CertificateServiceSettings)));
+            services.AddTransient<ICertificateService, CertificateService>();
+
             services.AddCors();
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddMvcOptions(options => options.EnableEndpointRouting = false)
                 .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.ContractResolver = new LowercaseContractResolver();
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = new LowercaseNamingPolicy();
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
                 });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
             }

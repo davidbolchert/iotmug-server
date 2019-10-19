@@ -16,7 +16,6 @@ namespace IoTMug.Api.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            System.IO.File.WriteAllBytes("test.pfx", _certificateService.GenerateDeviceCertificate("test", "test"));
             return new string[] { "value1", "value2" };
         }
 

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using IoTMug.Core;
 using IoTMug.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +16,7 @@ namespace IoTMug.Api.Controllers
         public DevicesController(IDatabaseService databaseService) => _databaseService = databaseService;
 
         [HttpGet]
-        [Authorize]
+       // [Authorize]
         public IActionResult Get()
         {
             var devices = _databaseService.Get<Device>(includeProperties: d => d.Include(dt => dt.Type)).ToList();

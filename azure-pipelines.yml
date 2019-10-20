@@ -20,6 +20,9 @@ steps:
     version: 3.x
     includePreviewVersions: true
 
+- script: dotnet restore
+  displayName: 'dotnet restore'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 

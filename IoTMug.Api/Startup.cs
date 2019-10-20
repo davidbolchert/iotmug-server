@@ -63,7 +63,9 @@ namespace IoTMug.Api
             app.UseCors(builder => 
             {
                 builder.AllowAnyOrigin();
+                builder.AllowAnyMethod();
                 builder.WithHeaders("authorization");
+                builder.WithHeaders("content-type");
             });
             app.UseHttpsRedirection();
             app.UseStaticFiles();

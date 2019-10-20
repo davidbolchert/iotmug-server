@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using IoTMug.Api.Dto;
 using IoTMug.Core;
 using IoTMug.Services.Interfaces;
-using IoTMug.Services.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace IoTMug.Api.Controllers
 {
@@ -18,7 +18,6 @@ namespace IoTMug.Api.Controllers
         public DevicesController(IDatabaseService databaseService) => _databaseService = databaseService;
 
         [HttpGet]
-       // [Authorize]
         public IActionResult Get()
         {
             var devices = _databaseService.Get<Device>(includeProperties: d => d.Include(dt => dt.Type)).ToList();
@@ -27,7 +26,6 @@ namespace IoTMug.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize]
         public IActionResult Get([FromRoute] Guid deviceId)
         {
             var device = _databaseService.Get<Device>((d => d.DeviceId == deviceId), includeProperties: d => d.Include(dt => dt.Type)).FirstOrDefault();
@@ -37,16 +35,40 @@ namespace IoTMug.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public IActionResult Post([FromBody] Device device)
+        public async Task<IActionResult> Post([FromBody] Device device)
         {
-            if (!ModelState.IsValid) return BadRequest(new { error = "Invalid Entity Model" });
+            if (!ModelState.IsValid) return BadRequest(new HttpMessage("Invalid Entity Model"));
 
             var alreadyCreated = _databaseService.Get<Device>(d => d.Name == device.Name).Any();
-            if (alreadyCreated) return BadRequest(new { error = "A Device with this name already exists. The name must be Unique" });
+            if (alreadyCreated) return BadRequest(new HttpMessage("A Device with this name already exists. The name must be Unique"));
 
-            _databaseService.Add(device);
+            await _databaseService.AddAsync(device);
             return Created(new Uri($"{Request.Path}/{device.DeviceId}", UriKind.Relative), device);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromBody] Device device)
+        {
+            if (!ModelState.IsValid) return BadRequest(new HttpMessage("Invalid Entity Model"));
+
+            var entity = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == device.DeviceId);
+            if (entity.Name != device.Name) return BadRequest(new HttpMessage("Name cannot be changed once the device has been created"));
+
+            entity.Twin = device.Twin;
+            entity.Type = device.Type;
+
+            await _databaseService.UpdateAsync(entity);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromRoute] Guid deviceId)
+        {
+            var device = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == deviceId);
+            if (device == default(Device)) return NotFound();
+
+            await _databaseService.DeleteAsync(device);
+            return NoContent();
         }
     }
 }

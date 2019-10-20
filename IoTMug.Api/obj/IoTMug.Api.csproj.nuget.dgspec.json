@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\IoTMug.Api.csproj": {}
+    "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\IoTMug.Api.csproj": {}
   },
   "projects": {
-    "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\IoTMug.Api.csproj": {
+    "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\IoTMug.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\IoTMug.Api.csproj",
+        "projectUniqueName": "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\IoTMug.Api.csproj",
         "projectName": "IoTMug.Api",
-        "projectPath": "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\IoTMug.Api.csproj",
+        "projectPath": "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\IoTMug.Api.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "E:\\David\\Projects\\IoTMug\\IoTMug.Api\\obj\\",
+        "outputPath": "E:\\David\\Projects\\IoTMug\\iotmug-server\\IoTMug.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -60,10 +60,16 @@
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

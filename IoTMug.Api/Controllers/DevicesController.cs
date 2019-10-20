@@ -2,9 +2,11 @@
 using System.Linq;
 using IoTMug.Core;
 using IoTMug.Services.Interfaces;
+using IoTMug.Services.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace IoTMug.Api.Controllers
 {

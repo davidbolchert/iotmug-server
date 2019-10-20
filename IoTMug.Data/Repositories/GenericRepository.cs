@@ -51,7 +51,7 @@ namespace IoTMug.Data.Repositories
 
             if (includeProperties != null) query = includeProperties?.Invoke(query);
 
-            return query.ToList();
+            return query;
         }
     }
 }

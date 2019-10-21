@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace IoTMug.Data.Repositories
 {
@@ -12,10 +13,10 @@ namespace IoTMug.Data.Repositories
 
         public GenericRepository(IoTMugContext context) => _context = context;
 
-        public void Add<TCore>(TCore entity) where TCore : class
+        public async Task AddAsync<TCore>(TCore entity) where TCore : class
         {
-            _context.Set<TCore>().Add(entity);
-            _context.SaveChanges();
+            await _context.Set<TCore>().AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<TCore> Find<TCore>(Func<TCore, bool> where) where TCore : class
@@ -27,10 +28,16 @@ namespace IoTMug.Data.Repositories
         public TCore GetFirstOrDefault<TCore>(Expression<Func<TCore, bool>> id) where TCore : class
             => _context.Set<TCore>().FirstOrDefault(id);
 
-        public void Update<TCore>(TCore entity) where TCore : class
+        public async Task UpdateAsync<TCore>(TCore entity) where TCore : class
         {
             _context.Attach(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync<TCore>(TCore entity) where TCore : class
+        {
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<TCore> Get<TCore>(Expression<Func<TCore, bool>> @where = null, int? skip = null, int? limit = null, Func<IQueryable<TCore>, IQueryable<TCore>> includeProperties = null) where TCore : class

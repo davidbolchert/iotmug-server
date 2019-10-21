@@ -15,25 +15,31 @@ namespace IoTMug.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IoTMug.Core.Device", b =>
                 {
                     b.Property<Guid>("DeviceId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("DeviceTypeId");
+                    b.Property<Guid?>("DeviceTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PfxCertificate");
+                    b.Property<byte[]>("PfxCertificate")
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("TwinData");
+                    b.Property<string>("Twin")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeviceId");
 
@@ -45,13 +51,16 @@ namespace IoTMug.Data.Migrations
             modelBuilder.Entity("IoTMug.Core.DeviceType", b =>
                 {
                     b.Property<Guid>("DeviceTypeId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("DefaultTwinData")
-                        .IsRequired();
+                    b.Property<string>("DefaultTwin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeviceTypeId");
 
@@ -61,7 +70,7 @@ namespace IoTMug.Data.Migrations
             modelBuilder.Entity("IoTMug.Core.Device", b =>
                 {
                     b.HasOne("IoTMug.Core.DeviceType", "Type")
-                        .WithMany()
+                        .WithMany("Devices")
                         .HasForeignKey("DeviceTypeId");
                 });
 #pragma warning restore 612, 618

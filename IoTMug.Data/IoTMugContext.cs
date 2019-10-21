@@ -9,5 +9,13 @@ namespace IoTMug.Data
 
         public DbSet<Device> Devices { get; set; }
         public DbSet<DeviceType> DeviceTypes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // configures one-to-many relationship
+            modelBuilder.Entity<Device>()
+                .HasOne(d => d.Type)
+                .WithMany(dt => dt.Devices);
+        }
     }
 }

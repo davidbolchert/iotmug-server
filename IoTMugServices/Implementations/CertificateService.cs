@@ -22,6 +22,8 @@ namespace IoTMug.Services.Implementations
 
         public byte[] GenerateDeviceCertificate(string commonName, string password)
         {
+            commonName = commonName.Replace("_", "__").Replace(' ', '_');
+
             using RSA rsa = RSA.Create(2048);
             var certificateRequest = new CertificateRequest(new X500DistinguishedName($"CN={commonName}"), rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 

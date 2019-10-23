@@ -1,6 +1,5 @@
 ﻿using IoTMug.Core.Attributes;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +19,7 @@ namespace IoTMug.Core
         public string Twin { get; set; }
 
         [ForeignKey("DeviceTypeId")]
+        public Guid DeviceTypeId { get; set; }
         public virtual DeviceType Type { get; set; }
     }
 }

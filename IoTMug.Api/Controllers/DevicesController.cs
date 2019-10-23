@@ -15,7 +15,12 @@ namespace IoTMug.Api.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly IDatabaseService _databaseService;
-        public DevicesController(IDatabaseService databaseService) => _databaseService = databaseService;
+        private readonly ICertificateService _certificateService;
+        public DevicesController(IDatabaseService databaseService, ICertificateService certificateService)
+        {
+            _databaseService = databaseService;
+            _certificateService = certificateService;
+        }
 
         [HttpGet]
         public IActionResult Get()
@@ -26,12 +31,28 @@ namespace IoTMug.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get([FromRoute] Guid deviceId)
+        public IActionResult Get([FromRoute] Guid id)
         {
-            var device = _databaseService.Get<Device>((d => d.DeviceId == deviceId), includeProperties: d => d.Include(dt => dt.Type)).FirstOrDefault();
+            var device = _databaseService.Get<Device>((d => d.DeviceId == id), includeProperties: d => d.Include(dt => dt.Type)).FirstOrDefault();
             if (device == default(Device)) return NotFound();
 
             return Ok(device);
+        }
+
+        [HttpGet]
+        [Route("certify/{id}")]
+        public IActionResult Certify([FromRoute] Guid id)
+        {
+            var device = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == id);
+            if (device == default(Device)) return NotFound();
+
+            if (device.PfxCertificate == null)
+            {
+                device.PfxCertificate = _certificateService.GenerateDeviceCertificate(device.Name, device.DeviceId.ToString());
+                _databaseService.UpdateAsync(device);
+            }
+
+            return File(device.PfxCertificate, "application/x-pkcs12", $"{device.Name}.pfx");
         }
 
         [HttpPost]
@@ -42,6 +63,7 @@ namespace IoTMug.Api.Controllers
             var alreadyCreated = _databaseService.Get<Device>(d => d.Name == device.Name).Any();
             if (alreadyCreated) return BadRequest(new HttpMessage("A Device with this name already exists. The name must be Unique"));
 
+            //device.Type = _databaseService.GetFirstOrDefault<DeviceType>(dt => dt.DeviceTypeId == device.Type.DeviceTypeId);
             await _databaseService.AddAsync(device);
             return Created(new Uri($"{Request.Path}/{device.DeviceId}", UriKind.Relative), device);
         }
@@ -55,16 +77,18 @@ namespace IoTMug.Api.Controllers
             if (entity.Name != device.Name) return BadRequest(new HttpMessage("Name cannot be changed once the device has been created"));
 
             entity.Twin = device.Twin;
-            entity.Type = device.Type;
+            //device.Type = _databaseService.GetFirstOrDefault<DeviceType>(dt => dt.DeviceTypeId == device.Type.DeviceTypeId);
+            entity.DeviceTypeId = device.DeviceTypeId;
 
             await _databaseService.UpdateAsync(entity);
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromRoute] Guid deviceId)
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var device = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == deviceId);
+            var device = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == id);
             if (device == default(Device)) return NotFound();
 
             await _databaseService.DeleteAsync(device);

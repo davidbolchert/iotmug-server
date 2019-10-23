@@ -40,11 +40,13 @@ namespace IoTMug.Api
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddMvcOptions(options => options.EnableEndpointRouting = false)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy = new LowercaseNamingPolicy();
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                 });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

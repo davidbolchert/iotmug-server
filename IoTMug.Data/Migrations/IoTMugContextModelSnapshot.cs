@@ -31,6 +31,9 @@ namespace IoTMug.Data.Migrations
                     b.Property<Guid>("DeviceTypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsRegistered")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

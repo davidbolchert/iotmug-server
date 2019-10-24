@@ -15,6 +15,8 @@ namespace IoTMug.Core
         public string Description { get; set; }
         public byte[] PfxCertificate { get; set; }
 
+        public bool IsRegistered { get; set; } = false;
+
         [JsonFormat]
         public string Twin { get; set; }
 

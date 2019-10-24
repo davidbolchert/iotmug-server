@@ -23,6 +23,12 @@
     <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Assets\1664.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\child.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\intermediate.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

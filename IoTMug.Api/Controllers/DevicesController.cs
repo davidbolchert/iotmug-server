@@ -1,12 +1,15 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IoTMug.Api.Dto;
 using IoTMug.Core;
 using IoTMug.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace IoTMug.Api.Controllers
 {
@@ -16,10 +19,17 @@ namespace IoTMug.Api.Controllers
     {
         private readonly IDatabaseService _databaseService;
         private readonly ICertificateService _certificateService;
-        public DevicesController(IDatabaseService databaseService, ICertificateService certificateService)
+        private readonly IProvisioningService _provisionningService;
+        private readonly IIoTHubService _ioTHubService;
+        public DevicesController(IDatabaseService databaseService, 
+            ICertificateService certificateService, 
+            IProvisioningService provisionningService,
+            IIoTHubService ioTHubService)
         {
             _databaseService = databaseService;
             _certificateService = certificateService;
+            _provisionningService = provisionningService;
+            _ioTHubService = ioTHubService;
         }
 
         [HttpGet]
@@ -41,15 +51,22 @@ namespace IoTMug.Api.Controllers
 
         [HttpGet]
         [Route("certify/{id}")]
-        public IActionResult Certify([FromRoute] Guid id)
+        public async Task<IActionResult> Certify([FromRoute] Guid id)
         {
             var device = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == id);
             if (device == default(Device)) return NotFound();
 
-            if (device.PfxCertificate == null)
+            if (device.PfxCertificate == null || !device.IsRegistered)
             {
-                device.PfxCertificate = _certificateService.GenerateDeviceCertificate(device.Name, device.DeviceId.ToString());
-                _databaseService.UpdateAsync(device);
+                var certificate = _certificateService.GenerateDeviceCertificate(device.Name);
+
+                var certificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Assets/1664.pfx");
+                certificate = new X509Certificate2(certificatePath, "1234");
+
+                device.IsRegistered = await _provisionningService.RegisterAsync(certificate);
+                device.PfxCertificate = certificate.Export(X509ContentType.Pfx, "1234");
+                // await _databaseService.UpdateAsync(device);
+                // await UpdateTwin(device);
             }
 
             return File(device.PfxCertificate, "application/x-pkcs12", $"{device.Name}.pfx");
@@ -63,7 +80,6 @@ namespace IoTMug.Api.Controllers
             var alreadyCreated = _databaseService.Get<Device>(d => d.Name == device.Name).Any();
             if (alreadyCreated) return BadRequest(new HttpMessage("A Device with this name already exists. The name must be Unique"));
 
-            //device.Type = _databaseService.GetFirstOrDefault<DeviceType>(dt => dt.DeviceTypeId == device.Type.DeviceTypeId);
             await _databaseService.AddAsync(device);
             return Created(new Uri($"{Request.Path}/{device.DeviceId}", UriKind.Relative), device);
         }
@@ -77,10 +93,12 @@ namespace IoTMug.Api.Controllers
             if (entity.Name != device.Name) return BadRequest(new HttpMessage("Name cannot be changed once the device has been created"));
 
             entity.Twin = device.Twin;
-            //device.Type = _databaseService.GetFirstOrDefault<DeviceType>(dt => dt.DeviceTypeId == device.Type.DeviceTypeId);
             entity.DeviceTypeId = device.DeviceTypeId;
 
             await _databaseService.UpdateAsync(entity);
+
+            if (entity.IsRegistered) await UpdateTwin(entity);
+
             return NoContent();
         }
 
@@ -93,6 +111,15 @@ namespace IoTMug.Api.Controllers
 
             await _databaseService.DeleteAsync(device);
             return NoContent();
+        }
+
+        private async Task UpdateTwin(Device device)
+        {
+            if (device.DeviceId != Guid.Empty)
+            {
+                await _ioTHubService.UpdateDeviceTwin(device.DeviceId.ToString(), JObject.Parse(device.Twin));
+                await _ioTHubService.ExecuteMethodOnDevice(IoTHubMethods.UPDATE_TWIN, device.DeviceId.ToString());
+            }
         }
     }
 }

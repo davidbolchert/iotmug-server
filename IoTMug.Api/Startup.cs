@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Text.Json;
 
 namespace IoTMug.Api
 {
@@ -28,13 +27,21 @@ namespace IoTMug.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add entity framework services.
-            services.Configure<DatabaseSettings>(Configuration.GetSection("ConnectionStrings"));
-            services.AddDbContext<IoTMugContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
+            services.AddDbContext<IoTMugContext>(options => options.UseSqlServer(Configuration.GetSection(nameof(DatabaseSettings))["ConnectionString"]));
             services.AddTransient<IDatabaseService, GenericRepository>();
 
-            // Add iot hub services
+            // Add certificate services
             services.Configure<CertificateServiceSettings>(Configuration.GetSection(nameof(CertificateServiceSettings)));
-            services.AddTransient<ICertificateService, CertificateService>();
+            services.AddTransient<ICertificateService, CertificateServiceImplementation>();
+
+            // Add provisionnning services
+            services.Configure<ProvisionningServiceSettings>(Configuration.GetSection(nameof(ProvisionningServiceSettings)));
+            services.AddTransient<IProvisioningService, ProvisioningServiceImplementation>();
+
+            // Add iot hub services
+            services.Configure<IoTHubSettings>(Configuration.GetSection(nameof(IoTHubSettings)));
+            services.AddTransient<IIoTHubService, IoTHubServiceImplementation>();
 
             services.AddCors();
             services.AddMvc()

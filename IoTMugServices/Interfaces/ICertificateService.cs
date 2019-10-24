@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Security.Cryptography.X509Certificates;
 
 namespace IoTMug.Services.Interfaces
 {
     public interface ICertificateService
     {
-        byte[] GenerateDeviceCertificate(string commonName, string password);
+        X509Certificate2 GenerateDeviceCertificate(string commonName);
     }
 }

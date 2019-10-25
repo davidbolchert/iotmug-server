@@ -1,15 +1,16 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IoTMug.Api.Dto;
 using IoTMug.Core;
 using IoTMug.Services.Interfaces;
+using IoTMug.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using IoTMug.Shared.Extensions;
+using System.Security.Cryptography.X509Certificates;
+using IoTMug.Api.Dto.Adapters;
 
 namespace IoTMug.Api.Controllers
 {
@@ -21,6 +22,8 @@ namespace IoTMug.Api.Controllers
         private readonly ICertificateService _certificateService;
         private readonly IProvisioningService _provisionningService;
         private readonly IIoTHubService _ioTHubService;
+        private readonly IDtoAdapter<Device, DeviceDto> _deviceDtoAdapter;
+
         public DevicesController(IDatabaseService databaseService, 
             ICertificateService certificateService, 
             IProvisioningService provisionningService,
@@ -30,13 +33,15 @@ namespace IoTMug.Api.Controllers
             _certificateService = certificateService;
             _provisionningService = provisionningService;
             _ioTHubService = ioTHubService;
+            _deviceDtoAdapter = new DeviceDtoAdapter(_ioTHubService);
         }
 
         [HttpGet]
         public IActionResult Get()
         {
             var devices = _databaseService.Get<Device>(includeProperties: d => d.Include(dt => dt.Type)).ToList();
-            return Ok(devices);
+            var devicesDto = _deviceDtoAdapter.ConvertToDtos(devices);
+            return Ok(devicesDto);
         }
 
         [HttpGet]
@@ -46,7 +51,8 @@ namespace IoTMug.Api.Controllers
             var device = _databaseService.Get<Device>((d => d.DeviceId == id), includeProperties: d => d.Include(dt => dt.Type)).FirstOrDefault();
             if (device == default(Device)) return NotFound();
 
-            return Ok(device);
+            var deviceDto = _deviceDtoAdapter.ConvertToDto(device);
+            return Ok(deviceDto);
         }
 
         [HttpGet]
@@ -58,53 +64,49 @@ namespace IoTMug.Api.Controllers
 
             if (device.PfxCertificate == null || !device.IsRegistered)
             {
-                var certificate = _certificateService.GenerateDeviceCertificate(device.Name);
+                var certificate = _certificateService.GenerateDeviceCertificate(device.CommonName);
+                var password = device.GetPassword();
 
-                ///await _ioTHubService.AddDevice("test");
-                try
-                {
-                    var certificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Assets/test.pfx");
-                    certificate = new X509Certificate2(certificatePath, "1234");
-                }
-                catch (Exception) 
-                {
-                    device.PfxCertificate = certificate.Export(X509ContentType.Pfx, "1234");
-                }
+                device.PfxCertificate = certificate.Export(X509ContentType.Pfx, password);
 
-                device.IsRegistered = await _provisionningService.RegisterAsync(certificate);
-                //await _databaseService.UpdateAsync(device);
-                //await UpdateTwin(device);
+                var registrationCertificate = device.GetRegistrationCertificate(); // Work Around to avoid registrastion issues
+                device.IsRegistered = await _provisionningService.RegisterAsync(registrationCertificate);
+               
+                await _databaseService.UpdateAsync(device);
+                await _ioTHubService.UpdateDeviceTwin(device.CommonName, device.TwinData);
             }
 
             return File(device.PfxCertificate, "application/x-pkcs12", $"{device.Name}.pfx");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Device device)
+        public async Task<IActionResult> Post([FromBody] DeviceDto deviceDto)
         {
-            if (!ModelState.IsValid) return BadRequest(new HttpMessage("Invalid Entity Model"));
+            if (!ModelState.IsValid) return BadRequest(new HttpMessageDto("Invalid Entity Model"));
 
-            var alreadyCreated = _databaseService.Get<Device>(d => d.Name == device.Name).Any();
-            if (alreadyCreated) return BadRequest(new HttpMessage("A Device with this name already exists. The name must be Unique"));
+            var alreadyCreated = _databaseService.Get<Device>(d => d.Name == deviceDto.Name).Any();
+            if (alreadyCreated) return BadRequest(new HttpMessageDto("A Device with this name already exists. The name must be Unique"));
 
+            var device = _deviceDtoAdapter.ConvertToEntity(deviceDto);
             await _databaseService.AddAsync(device);
-            return Created(new Uri($"{Request.Path}/{device.DeviceId}", UriKind.Relative), device);
+
+            return Created(new Uri($"{Request.Path}/{device.DeviceId}", UriKind.Relative), _deviceDtoAdapter.ConvertToDto(device));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit([FromBody] Device device)
+        public async Task<IActionResult> Edit([FromBody] DeviceDto deviceDto)
         {
-            if (!ModelState.IsValid) return BadRequest(new HttpMessage("Invalid Entity Model"));
+            if (!ModelState.IsValid) return BadRequest(new HttpMessageDto("Invalid Entity Model"));
 
-            var entity = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == device.DeviceId);
-            if (entity.Name != device.Name) return BadRequest(new HttpMessage("Name cannot be changed once the device has been created"));
+            var entity = _databaseService.GetFirstOrDefault<Device>(d => d.DeviceId == deviceDto.DeviceId);
+            if (entity.Name != deviceDto.Name) return BadRequest(new HttpMessageDto("Name cannot be changed once the device has been created"));
 
-            entity.Twin = device.Twin;
-            entity.DeviceTypeId = device.DeviceTypeId;
+            entity.TwinData = JObject.Parse(deviceDto.Twin);
+            entity.DeviceTypeId = deviceDto.DeviceTypeId;
 
             await _databaseService.UpdateAsync(entity);
 
-            if (entity.IsRegistered) await UpdateTwin(entity);
+            if (entity.IsRegistered) await _ioTHubService.UpdateDeviceTwin(entity.CommonName, entity.TwinData);
 
             return NoContent();
         }
@@ -118,15 +120,6 @@ namespace IoTMug.Api.Controllers
 
             await _databaseService.DeleteAsync(device);
             return NoContent();
-        }
-
-        private async Task UpdateTwin(Device device)
-        {
-            if (device.DeviceId != Guid.Empty)
-            {
-                await _ioTHubService.UpdateDeviceTwin(device.DeviceId.ToString(), JObject.Parse(device.Twin));
-                await _ioTHubService.ExecuteMethodOnDevice(IoTHubMethods.UPDATE_TWIN, device.DeviceId.ToString());
-            }
         }
     }
 }

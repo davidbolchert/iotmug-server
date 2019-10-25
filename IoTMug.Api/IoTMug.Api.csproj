@@ -17,13 +17,14 @@
   <ItemGroup>
     <ProjectReference Include="..\IoTMug.Core\IoTMug.Core.csproj" />
     <ProjectReference Include="..\IoTMug.Data\IoTMug.Data.csproj" />
+    <ProjectReference Include="..\IoTMug.Shared\IoTMug.Shared.csproj" />
     <ProjectReference Include="..\IoTMugServices\IoTMug.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Assets\intermediate.pfx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="Assets\1664 Drawer.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\root.pfx">
+    <None Update="Assets\mug.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\test2.pfx">

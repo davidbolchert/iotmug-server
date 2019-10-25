@@ -5,9 +5,6 @@ using Microsoft.Azure.Devices.Provisioning.Client.Transport;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Extensions.Options;
 using System;
-using System.IO;
-using System.Net.Http;
-using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -24,13 +21,8 @@ namespace IoTMug.Services.Implementations
 
         public async Task<bool> RegisterAsync(X509Certificate2 certificate)
         {
-            //var rootCertificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), _settings.RootCertificatePath);
-            //var root = new X509Certificate2(rootCertificatePath, "Mug2910.");
-            //var intermediateCertificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), _settings.IntermediateCertificatePath);
-            //var intermediate = new X509Certificate2(intermediateCertificatePath, "Iot2910.");
-
             using var security = new SecurityProviderX509Certificate(certificate);
-            using var transport = new ProvisioningTransportHandlerHttp();
+            using var transport = new ProvisioningTransportHandlerAmqp(TransportFallbackType.WebSocketOnly);
             var provisionningDeviceClient = ProvisioningDeviceClient.Create(
                 _settings.DeviceProvisionningServiceEndPoint,
                 _settings.DeviceProvisionningServiceScopeId,
@@ -42,11 +34,9 @@ namespace IoTMug.Services.Implementations
                 var result = await provisionningDeviceClient.RegisterAsync();
                 return result.Status == ProvisioningRegistrationStatusType.Assigned;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var test = ex;
                 // Handle exception here if you want
-                return false;
                 throw;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using IoTMug.Core.Attributes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +13,10 @@ namespace IoTMug.Core
 
         [Required]
         public string Name { get; set; }
+
+        [NotMapped]
+        public string CommonName => Name.Replace("_", "__").Replace(' ', '_');
+
         public string Description { get; set; }
         public byte[] PfxCertificate { get; set; }
 
@@ -19,6 +24,13 @@ namespace IoTMug.Core
 
         [JsonFormat]
         public string Twin { get; set; }
+        
+        [NotMapped]
+        public JObject TwinData
+        {
+            get => JObject.Parse(Twin ?? new JObject().ToString());
+            set => Twin = value.ToString();
+        }
 
         [ForeignKey("DeviceTypeId")]
         public Guid DeviceTypeId { get; set; }

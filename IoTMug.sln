@@ -5,11 +5,15 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTMug.Api", "IoTMug.Api\IoTMug.Api.csproj", "{8BAC2112-BA23-4606-92E6-5F569113C0B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTMug.Data", "IoTMug.Data\IoTMug.Data.csproj", "{41433956-7398-49D8-B83B-1A6E77118D9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTMug.Data", "IoTMug.Data\IoTMug.Data.csproj", "{41433956-7398-49D8-B83B-1A6E77118D9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTMug.Core", "IoTMug.Core\IoTMug.Core.csproj", "{404E1D1E-F41B-461E-A30F-78A6819F6A66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTMug.Core", "IoTMug.Core\IoTMug.Core.csproj", "{404E1D1E-F41B-461E-A30F-78A6819F6A66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTMug.Services", "IoTMugServices\IoTMug.Services.csproj", "{BBADEE41-6A3C-43BF-8D33-E893AB726622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTMug.Services", "IoTMugServices\IoTMug.Services.csproj", "{BBADEE41-6A3C-43BF-8D33-E893AB726622}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTMug.Shared", "IoTMug.Shared\IoTMug.Shared.csproj", "{288B8798-E6D6-4A63-A346-C5F8A85EC766}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTMug.Device", "IoTMug.Device\IoTMug.Device.csproj", "{FBBA8B67-12C1-464D-9CBA-AC9CDC459AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{BBADEE41-6A3C-43BF-8D33-E893AB726622}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBADEE41-6A3C-43BF-8D33-E893AB726622}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBADEE41-6A3C-43BF-8D33-E893AB726622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{288B8798-E6D6-4A63-A346-C5F8A85EC766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{288B8798-E6D6-4A63-A346-C5F8A85EC766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{288B8798-E6D6-4A63-A346-C5F8A85EC766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{288B8798-E6D6-4A63-A346-C5F8A85EC766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBBA8B67-12C1-464D-9CBA-AC9CDC459AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBBA8B67-12C1-464D-9CBA-AC9CDC459AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBBA8B67-12C1-464D-9CBA-AC9CDC459AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBBA8B67-12C1-464D-9CBA-AC9CDC459AD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

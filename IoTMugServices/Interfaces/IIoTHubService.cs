@@ -14,8 +14,8 @@ namespace IoTMug.Services.Interfaces
 
     public interface IIoTHubService
     {
-        Task AddDevice(string deviceId);
         Task UpdateDeviceTwin(string deviceId, JObject jsonTwinDesired);
         Task<int> ExecuteMethodOnDevice(string methodName, string deviceId);
+        Task<bool> IsDeviceConnected(string deviceId);
     }
 }

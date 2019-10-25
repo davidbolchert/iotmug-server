@@ -37,10 +37,10 @@ namespace IoTMug.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] DeviceType deviceType)
         {
-            if (!ModelState.IsValid) return BadRequest(new HttpMessage("Invalid Entity Model"));
+            if (!ModelState.IsValid) return BadRequest(new HttpMessageDto("Invalid Entity Model"));
 
             var alreadyCreated = _databaseService.Get<DeviceType>(d => d.Name == deviceType.Name).Any();
-            if (alreadyCreated) return BadRequest(new HttpMessage("A Type with this name already exists. The name must be unique"));
+            if (alreadyCreated) return BadRequest(new HttpMessageDto("A Type with this name already exists. The name must be unique"));
 
             await _databaseService.AddAsync(deviceType);
             return Created(new Uri($"{Request.Path}/{deviceType.DeviceTypeId}", UriKind.Relative), deviceType);
@@ -49,13 +49,13 @@ namespace IoTMug.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Edit([FromBody] DeviceType deviceType)
         {
-            if (!ModelState.IsValid) return BadRequest(new HttpMessage("Invalid Entity Model"));
+            if (!ModelState.IsValid) return BadRequest(new HttpMessageDto("Invalid Entity Model"));
 
             var entity = _databaseService.GetFirstOrDefault<DeviceType>(d => d.DeviceTypeId == deviceType.DeviceTypeId);
 
             if (entity == null) return NotFound();
 
-            if (entity.Name != deviceType.Name) return BadRequest(new HttpMessage("Name cannot be changed once the type has been created"));
+            if (entity.Name != deviceType.Name) return BadRequest(new HttpMessageDto("Name cannot be changed once the type has been created"));
 
             entity.DefaultTwin = deviceType.DefaultTwin;
 
@@ -70,7 +70,7 @@ namespace IoTMug.Api.Controllers
             var deviceType = _databaseService.Get<DeviceType>(dt => dt.DeviceTypeId == id).FirstOrDefault();
             if (deviceType == default(DeviceType)) return NotFound();
             
-            if (deviceType.Devices.Count > 0) return BadRequest(new HttpMessage("There are one or several devices linked to this type."));
+            if (deviceType.Devices.Count > 0) return BadRequest(new HttpMessageDto("There are one or several devices linked to this type."));
 
             await _databaseService.DeleteAsync(deviceType);
             return NoContent();

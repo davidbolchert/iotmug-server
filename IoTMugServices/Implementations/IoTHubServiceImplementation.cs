@@ -20,12 +20,6 @@ namespace IoTMug.Services.Implementations
             _settings = settings.Value;
         }
 
-        public async Task AddDevice(string deviceId)
-        {
-            using var registryManager = RegistryManager.CreateFromConnectionString(_settings.ConnectionString);
-            await registryManager.AddDeviceAsync(new Device(deviceId));
-        }
-
         public async Task UpdateDeviceTwin(string deviceId, JObject jsonTwinDesired)
         {
             var properties = new TwinProperties();
@@ -40,6 +34,9 @@ namespace IoTMug.Services.Implementations
             var etag = Encoding.UTF8.GetString(hasher.ComputeHash(Encoding.UTF8.GetBytes(jsonTwinDesired.ToString())));
 
             await registryManager.UpdateTwinAsync(deviceId, twin, etag);
+
+            var device = await registryManager.GetDeviceAsync(deviceId);
+            if (device.ConnectionState == DeviceConnectionState.Connected) await this.ExecuteMethodOnDevice(IoTHubMethods.UPDATE_TWIN, deviceId);
         }
 
         public async Task<int> ExecuteMethodOnDevice(string methodName, string deviceId)
@@ -57,6 +54,13 @@ namespace IoTMug.Services.Implementations
                 // log exception here and handle it if you want
                 throw;
             }
+        }
+
+        public async Task<bool> IsDeviceConnected(string deviceId)
+        {
+            using var registryManager = RegistryManager.CreateFromConnectionString(_settings.ConnectionString);
+            var device = await registryManager.GetDeviceAsync(deviceId);
+            return device != null && device.ConnectionState == DeviceConnectionState.Connected;
         }
     }
 }

@@ -20,6 +20,12 @@ namespace IoTMug.Services.Implementations
             _settings = settings.Value;
         }
 
+        public async Task AddDevice(string deviceId)
+        {
+            using var registryManager = RegistryManager.CreateFromConnectionString(_settings.ConnectionString);
+            await registryManager.AddDeviceAsync(new Device(deviceId));
+        }
+
         public async Task UpdateDeviceTwin(string deviceId, JObject jsonTwinDesired)
         {
             var properties = new TwinProperties();

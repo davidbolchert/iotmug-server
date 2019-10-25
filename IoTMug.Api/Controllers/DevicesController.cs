@@ -60,13 +60,20 @@ namespace IoTMug.Api.Controllers
             {
                 var certificate = _certificateService.GenerateDeviceCertificate(device.Name);
 
-                var certificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Assets/1664.pfx");
-                certificate = new X509Certificate2(certificatePath, "1234");
+                ///await _ioTHubService.AddDevice("test");
+                try
+                {
+                    var certificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Assets/test.pfx");
+                    certificate = new X509Certificate2(certificatePath, "1234");
+                }
+                catch (Exception) 
+                {
+                    device.PfxCertificate = certificate.Export(X509ContentType.Pfx, "1234");
+                }
 
                 device.IsRegistered = await _provisionningService.RegisterAsync(certificate);
-                device.PfxCertificate = certificate.Export(X509ContentType.Pfx, "1234");
-                // await _databaseService.UpdateAsync(device);
-                // await UpdateTwin(device);
+                //await _databaseService.UpdateAsync(device);
+                //await UpdateTwin(device);
             }
 
             return File(device.PfxCertificate, "application/x-pkcs12", $"{device.Name}.pfx");

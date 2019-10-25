@@ -43,7 +43,7 @@ namespace IoTMug.Api
             services.Configure<IoTHubSettings>(Configuration.GetSection(nameof(IoTHubSettings)));
             services.AddTransient<IIoTHubService, IoTHubServiceImplementation>();
 
-            services.AddCors();
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));   
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddMvcOptions(options => options.EnableEndpointRouting = false)
@@ -69,14 +69,7 @@ namespace IoTMug.Api
                 app.UseHsts();
             }
 
-            app.UseCors(builder => 
-            {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-                //builder.WithHeaders("authorization");
-                //builder.WithHeaders("content-type");
-            });
+            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

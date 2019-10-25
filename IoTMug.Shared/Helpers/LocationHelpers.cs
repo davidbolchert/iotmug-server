@@ -6,6 +6,7 @@ namespace IoTMug.Shared.Helpers
 {
     public static class LocationHelpers
     {
-        public static string GetAssemblyLocation() => Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+        public static string GetAssemblyLocation() => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        public static string GetLocationFromAssembly(string path) => Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), path);
     }
 }

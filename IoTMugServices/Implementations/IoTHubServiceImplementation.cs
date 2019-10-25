@@ -1,5 +1,6 @@
 ﻿using IoTMug.Services.Interfaces;
 using IoTMug.Services.Shared;
+using IoTMug.Shared.Helpers;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Extensions.Options;
@@ -27,13 +28,10 @@ namespace IoTMug.Services.Implementations
             using var registryManager = RegistryManager.CreateFromConnectionString(_settings.ConnectionString);
             var twin = await registryManager.GetTwinAsync(deviceId);
 
-            var configurationNode = new JObject { "Configuration", jsonTwinDesired };
+            var configurationNode = new JObject { new JProperty("Configuration", jsonTwinDesired) };
             twin.Properties.Desired = new TwinCollection(configurationNode.ToString());
 
-            using var hasher = SHA1.Create();
-            var etag = Encoding.UTF8.GetString(hasher.ComputeHash(Encoding.UTF8.GetBytes(jsonTwinDesired.ToString())));
-
-            await registryManager.UpdateTwinAsync(deviceId, twin, etag);
+            await registryManager.UpdateTwinAsync(deviceId, twin, twin.ETag);
 
             var device = await registryManager.GetDeviceAsync(deviceId);
             if (device.ConnectionState == DeviceConnectionState.Connected) await this.ExecuteMethodOnDevice(IoTHubMethods.UPDATE_TWIN, deviceId);

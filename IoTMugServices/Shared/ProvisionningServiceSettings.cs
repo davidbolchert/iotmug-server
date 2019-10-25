@@ -8,5 +8,6 @@ namespace IoTMug.Services.Shared
 
         public string RootCertificatePath { get; set; }
         public string IntermediateCertificatePath { get; set; }
+        public string[] ParentCertificates { get; set; }
     }
 }

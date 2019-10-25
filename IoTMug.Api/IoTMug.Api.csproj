@@ -21,10 +21,16 @@
     <ProjectReference Include="..\IoTMugServices\IoTMug.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Assets\1664 Drawer.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Assets\intermediate.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\mug.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\mug.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\root.cer">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\test2.pfx">

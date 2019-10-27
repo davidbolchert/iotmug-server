@@ -14,6 +14,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <ShowAllFiles>true</ShowAllFiles>
-    <NameOfLastUsedPublishProfile>api-iotmug - Web Deploy</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>api-mug - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

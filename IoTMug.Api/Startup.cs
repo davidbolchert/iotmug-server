@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System;
 
 namespace IoTMug.Api
 {
@@ -26,6 +27,9 @@ namespace IoTMug.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Environment Variables
+            Environment.SetEnvironmentVariable("WEBSITE_LOAD_USER_PROFILE ", "1");
+
             // Add entity framework services.
             services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
             services.AddDbContext<IoTMugContext>(options => options.UseSqlServer(Configuration.GetSection(nameof(DatabaseSettings))["ConnectionString"]));

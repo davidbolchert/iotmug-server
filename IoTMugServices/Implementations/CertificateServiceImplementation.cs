@@ -19,8 +19,7 @@ namespace IoTMug.Services.Implementations
         public CertificateServiceImplementation(IOptions<CertificateServiceSettings> settings)
         {
             _settings = settings.Value;
-            var certificatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), _settings.PfxCertificatePath);
-            _intermediateCertificate = new X509Certificate2(certificatePath, _settings.PrivateKeyPassword);
+            _intermediateCertificate = new X509Certificate2(LocationHelpers.GetLocationFromAssembly(_settings.PfxCertificatePath), _settings.PrivateKeyPassword);
         }
 
         public X509Certificate2 GenerateDeviceCertificate(string commonName)

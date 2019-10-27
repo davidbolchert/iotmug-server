@@ -4,9 +4,11 @@ namespace IoTMug.Device
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) => new Program();
+
+        public Program()
         {
-            Console.WriteLine("Hello World!");
+
         }
     }
 }

@@ -64,14 +64,15 @@ namespace IoTMug.Api.Controllers
 
             if (device.PfxCertificate == null || !device.IsRegistered)
             {
-                var certificate = _certificateService.GenerateDeviceCertificate(device.CommonName);
-                var password = device.GetPassword();
-
-                device.PfxCertificate = certificate.Export(X509ContentType.Pfx, password);
-
-                var registrationCertificate = device.GetRegistrationCertificate(); // Work Around to avoid registrastion issues
                 try
                 {
+                    var certificate = _certificateService.GenerateDeviceCertificate(device.CommonName);
+                    var password = device.GetPassword();
+
+                    device.PfxCertificate = certificate.Export(X509ContentType.Pfx, password);
+
+                    var registrationCertificate = device.GetRegistrationCertificate(); // Work Around to avoid registrastion issues
+
                     device.IsRegistered = await _provisionningService.RegisterAsync(registrationCertificate);
                 }
                 catch (Exception ex)

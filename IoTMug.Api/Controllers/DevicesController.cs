@@ -70,7 +70,14 @@ namespace IoTMug.Api.Controllers
                 device.PfxCertificate = certificate.Export(X509ContentType.Pfx, password);
 
                 var registrationCertificate = device.GetRegistrationCertificate(); // Work Around to avoid registrastion issues
-                device.IsRegistered = await _provisionningService.RegisterAsync(registrationCertificate);
+                try
+                {
+                    device.IsRegistered = await _provisionningService.RegisterAsync(registrationCertificate);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex);
+                }
                
                 await _databaseService.UpdateAsync(device);
                 await _ioTHubService.UpdateDeviceTwin(device.CommonName, device.TwinData);

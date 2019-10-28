@@ -1,0 +1,6 @@
+{
+  "deviceType": "BeerDrawer",
+  "pfxCertificatePath": "Assets/TripelKarmeliet.pfx",
+  "pfxPassword": "CB468D2F688B61D5D9B291247A18EF5C",
+  "iotHubEndPoint": "iotmug.azure-devices.net"
+}

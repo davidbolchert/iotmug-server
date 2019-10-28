@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace IoTMug.Services.Interfaces
 {
-    public struct IoTHubMethods
-    {
-        public const string UPDATE_TWIN = "UpdateTwin";
-    }
-
-
     public interface IIoTHubService
     {
         Task UpdateDeviceTwin(string deviceId, JObject jsonTwinDesired);

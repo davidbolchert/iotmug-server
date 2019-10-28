@@ -1,13 +1,11 @@
-﻿using IoTMug.Services.Interfaces;
+﻿using IoTMug.Core.IoTMessages;
+using IoTMug.Services.Interfaces;
 using IoTMug.Services.Shared;
-using IoTMug.Shared.Helpers;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IoTMug.Services.Implementations

@@ -10,10 +10,10 @@ namespace IoTMug.Core.IoTMessages
 
     public abstract class IoTMessage
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; } = new Guid();
         public virtual string Type { get; }
         public string Name { get; set; }
-        public long Ttl { get; set; }
+        public long Ttl { get; } = 2592000000;
         public DateTimeOffset Timestamp { get; set; }
     }
 }

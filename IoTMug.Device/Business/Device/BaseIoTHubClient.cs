@@ -3,9 +3,7 @@ using IoTMug.Shared.Helpers;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -17,6 +15,8 @@ namespace IoTMug.Device.Business.Device
 {
     public abstract class BaseIoTHubClient : IIoTHubClient
     {
+        public const string CONFIGURATION_NODE = "Configuration";
+
         public const uint OperationTimeoutInSeconds = 5;
         private readonly DeviceAuthenticationWithX509Certificate _deviceAuthentication;
 
@@ -85,6 +85,8 @@ namespace IoTMug.Device.Business.Device
             try
             {
                 _serverTwin = await Connector.GetTwinAsync();
+                TwinConfigurationHasChanged();
+                Program.Logger.Info($"[IotHub] Twin has been updated");
             }
             catch (Exception ex)
             {

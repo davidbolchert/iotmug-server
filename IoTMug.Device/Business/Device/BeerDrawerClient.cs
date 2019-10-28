@@ -18,31 +18,28 @@ namespace IoTMug.Device.Business.Device
         public override void TwinConfigurationHasChanged()
         {
             var jDesired = JObject.Parse(_serverTwin.Properties.Desired.ToJson());
-            _configuration = JsonConvert.DeserializeObject<BeerDrawerTwinConfiguration>(jDesired.GetValue("Configuration").ToString());
+            _configuration = JsonConvert.DeserializeObject<BeerDrawerTwinConfiguration>(jDesired.GetValue(CONFIGURATION_NODE).ToString());
+            Program.Logger.Info(JsonConvert.SerializeObject(_configuration, Formatting.Indented));
         }
 
-        public override Task Run(CancellationToken token)
+        public override async Task Run(CancellationToken token)
         {
-            Task.Run(() => UpdateTwinJob());
-            Task.Run(() => SendDrawerVolumeJob());
+            await Task.CompletedTask;
 
-            while (!token.IsCancellationRequested)
+#pragma warning disable CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
+            Task.Run(() => SendDrawerVolumeJob(token));
+
+            Task.Run(() =>
             {
-                Task.Run(() => ServeBeer());
-                Task.Delay(TimeSpan.FromSeconds(30)).GetAwaiter().GetResult();
-            }
+                while (!token.IsCancellationRequested)
+                {
+                    Task.Run(() => ServeBeer());
+                    Task.Delay(TimeSpan.FromSeconds(45)).GetAwaiter().GetResult();
+                }
+                Program.Logger.Warn("[Client] Cancelation has been requested");
+            });
 
-            Program.Logger.Warn("[Client] Cancelation has been requested");
-            return Task.CompletedTask;
-        }
-
-        private async Task UpdateTwinJob()
-        {
-            while (true)
-            {
-                await GetTwinConfigurationAsync();
-                await Task.Delay(TimeSpan.FromMinutes(5));
-            }
+#pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
         }
 
         private async Task ServeBeer()
@@ -51,6 +48,7 @@ namespace IoTMug.Device.Business.Device
 
             var timestamp = DateTimeOffset.Now;
             var commandType = Random.Next() % 3;
+            var loss = Random.Next() % 3 * 0.01;
 
             string value;
             double volume;
@@ -59,16 +57,16 @@ namespace IoTMug.Device.Business.Device
             {
                 case 1:
                     value = "happy";
-                    volume = 0.5;
+                    volume = 0.5 + loss;
                     break;
                 case 2:
                     value = "pint";
-                    volume = 0.5;
+                    volume = 0.5 + loss;
                     break;
                 case 3:
                 default:
                     value = "half";
-                    volume = 0.25;
+                    volume = 0.25 + loss;
                     break;
             }
 
@@ -93,9 +91,9 @@ namespace IoTMug.Device.Business.Device
             await SendMessage(measure);
         }
 
-        private async Task SendDrawerVolumeJob()
+        private async Task SendDrawerVolumeJob(CancellationToken token)
         {
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 var measure = new Measure()
                 {
@@ -106,7 +104,7 @@ namespace IoTMug.Device.Business.Device
                 };
 
                 await SendMessage(measure);
-                if (_drawerVolume == 0) _drawerVolume = 100; 
+                if (_drawerVolume < 0.5) _drawerVolume = 100; 
                 await Task.Delay(TimeSpan.FromMinutes(2));
             }
         }

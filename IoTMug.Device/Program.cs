@@ -26,6 +26,7 @@ namespace IoTMug.Device
                     break;
 
                 case DeviceTypes.LIGHT:
+                    _device = new LightClient();
                     break;
 
                 default:
@@ -37,7 +38,8 @@ namespace IoTMug.Device
             {
                 _device.ConnectAsync().GetAwaiter().GetResult();
                 var cancelationTokenSource = new CancellationTokenSource();
-                _device.Run(cancelationTokenSource.Token).GetAwaiter().GetResult();
+                _device.Run(cancelationTokenSource.Token);
+                Logger.Info($"Device is Running");
 
                 Console.ReadKey();
                 cancelationTokenSource.Cancel();

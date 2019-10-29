@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using IoTMug.Api.Dto;
 using IoTMug.Core;
 using IoTMug.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

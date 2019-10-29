@@ -9,7 +9,7 @@ namespace IoTMug.Core
     public class DeviceType
     {
         [Key]
-        public Guid DeviceTypeId { get; set; } = new Guid();
+        public Guid DeviceTypeId { get; set; } = Guid.NewGuid();
 
         [Required]
         public string Name { get; set; }
